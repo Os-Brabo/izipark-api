@@ -1,4 +1,5 @@
 import express, { Router } from "express"
+import { EnsureAuthenticatedMiddleware } from "./middlewares/EnsureAuthenticatedMiddleware"
 
 const app = express()
 
@@ -9,6 +10,10 @@ app.use(
     type: ["application/json", "text/plain"],
   })
 )
+
+router.get("/", EnsureAuthenticatedMiddleware, (req, res) => {
+  return res.json({ test: "ok" })
+})
 
 app.use(router)
 
