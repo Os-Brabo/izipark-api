@@ -1,3 +1,4 @@
+import "dotenv/config"
 import express, { Router } from "express"
 import { EnsureAuthenticatedMiddleware } from "./middlewares/EnsureAuthenticatedMiddleware"
 
@@ -11,8 +12,14 @@ app.use(
   })
 )
 
-router.get("/", EnsureAuthenticatedMiddleware, (req, res) => {
-  return res.json({ test: "ok" })
+router.use(EnsureAuthenticatedMiddleware)
+
+router.get("/", (req: any, res: any) => {
+  return res.json({ authenticated: req.oidc.isAuthenticated() })
+})
+router.post("/callback", (req, res) => {
+  console.log(req)
+  return res.send(200)
 })
 
 app.use(router)
